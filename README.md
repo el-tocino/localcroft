@@ -19,4 +19,5 @@ If you have a .wav file return tool, this could be modified easily to handle pre
 
 # Wiki
 
-See Wiki.md for more.
+See [here](Wiki.md) for more on that.
+
