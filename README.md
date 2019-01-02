@@ -21,3 +21,38 @@ If you have a .wav file return tool, this could be modified easily to handle pre
 
 See [here](Wiki.md) for more on that.
 
+# where to upload your precise wavs
+
+swap out /path/to/mycroft/client/speech/mic.py for this repo's version.
+
+# config
+
+bits I use to make things work locally...
+```
+  "listener": {
+    "wake_word_upload": {
+      "disable": false,
+      "url": "http://127.0.0.1:4000/precise/upload"
+    },
+  "stt": {
+    "module": "deepspeech_server",
+    "deepspeech_server": {
+      "uri": "http://127.0.0.1:1880/stt"
+    }
+  },
+  "tts": {
+    "module": "mimic2",
+    "mimic2": {
+      "lang": "en-us",
+      "url": "http://127.0.0.1/synthesize?text="
+    },
+  // Hotword configurations
+  "hotwords": {
+    "yourwordhere": {
+        "module": "precise",
+        "phonemes": "U R FO NE M Z HE R E",
+        "threshold": "1e-30",
+        "local_model_file": "/home/pi/.mycroft/precise/yourwordhere.pb"
+        }
+    },
+```
