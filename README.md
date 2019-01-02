@@ -1,6 +1,6 @@
 # Local mycroft things
 
-This includes two updates to help run a local instance of mycroft, and one how-i-did-it for running a local wikipedia copy.  
+This includes several file changes to help run a local instance of mycroft, and one how-i-did-it for running a local wikipedia copy. They can be used piecemeal or all at once.  
 
 # localDS-fix
 
