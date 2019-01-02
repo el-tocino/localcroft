@@ -21,10 +21,6 @@ If you have a .wav file return tool, this could be modified easily to handle pre
 
 See [here](Wiki.md) for more on that.
 
-# where to upload your precise wavs
-
-swap out /path/to/mycroft/client/speech/mic.py for this repo's version.
-
 # config
 
 bits I use to make things work locally...
