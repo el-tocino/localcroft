@@ -33,14 +33,14 @@ bits I use to make things work locally...
   "stt": {
     "module": "deepspeech_server",
     "deepspeech_server": {
-      "uri": "http://127.0.0.1:1880/stt"
+      "uri": "http://127.0.0.1:2000/stt"
     }
   },
   "tts": {
     "module": "mimic2",
     "mimic2": {
       "lang": "en-us",
-      "url": "http://127.0.0.1/synthesize?text="
+      "url": "http://127.0.0.1:3000/"
     },
   // Hotword configurations
   "hotwords": {
