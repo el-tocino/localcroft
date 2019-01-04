@@ -21,6 +21,10 @@ If you have a .wav file return tool, this could be modified easily to handle pre
 
 See [here](Wiki.md) for more on that.
 
+### precise uploads
+
+Run the uploader.py in a screen session on a viable host. Requires flask. May need to edit to adjust listen IP or save directory.  This makes use of the listener.url config.  Also will require adjusting mic.py to only upload the audio portion (remove the comma from the audio line (353?) and then comment out the metadata line.  Will add it here in a bit.
+
 ### config
 
 bits I use to make things work locally...
