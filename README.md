@@ -17,6 +17,8 @@ Move your existing /path/to/mycroft-core/mycroft/tts/mimic2.py to /path/to/mycro
 
 If you have a .wav file return tool, this could be modified easily to handle pretty much any end point.
 
+See the TTS config bits below for how to configure in your local conf.
+
 ### Wiki
 
 See [here](Wiki.md) for more on that.
@@ -44,7 +46,7 @@ bits I use to make things work locally...
     "module": "mimic2",
     "mimic2": {
       "lang": "en-us",
-      "url": "http://127.0.0.1:3000/"
+      "url": "http://127.0.0.1:3000"
     },
   // Hotword configurations
   "hotwords": {
