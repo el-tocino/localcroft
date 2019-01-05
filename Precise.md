@@ -6,7 +6,9 @@ The more data, the better.  To a point, which is about 50k samples apparently.  
 
 ##### wake words
 
-I've recorded myself quite a bit for my wake word.  I vary speed, inflection, volume, distance from mic, tone, etc. I have gotten about a dozen other folks to record samples for me, though these tend to be fairly uniform.  Know your target audience, and try and sample them.  The wider the range of samples you have, the better your model should perform. 
+I've recorded myself quite a bit for my wake word.  I vary speed, inflection, volume, distance from mic, tone, etc. I have gotten about a dozen other folks to record samples for me, though these tend to be fairly uniform.  Know your target audience, and try and sample them.  The wider the range of samples you have, the better your model should perform.  
+
+When recording, I've used a variety of mics.  I have a nice small diaphragm condenser that hits a usb preamp, a cheap usb mic, and a few on a PS Eye.  This isn't necessary, it's just been a matter of what was handy.  I believe that having a good base of clean wake word samples to start with is best.  From there it's a matter of testing to see what is best to record.  
 
 I have only recently started recording with noisy backgrounds.  Will update once I have better info.  
 
@@ -16,9 +18,9 @@ Oof.  The precise instructions are a good start, just be ready to add a lot of o
 
 As for spoken words, I used a scrabble word finder and rhymezone to target words that rhymed and had similar sounds.  With a list of about 120 of these, I recorded each one three times.  My helper voices usually get a list of fifteen words, containing three instances of my wake word and twelve fake words.  Sometimes there's multi-word combinations that falsely trigger it, these get added to my list and recorded.  
 
-Kid's TV shows have also caused a significant number of false activations for me.  This is where having local copies would be a big help. 
+TV shows have also caused a significant number of false activations for me.  This is where having local copies would be a big help. 
 
-### modeling
+#### modeling
 
 Any time you add more data, I find it's best to start training all over. 
 
