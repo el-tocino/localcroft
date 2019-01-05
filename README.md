@@ -58,3 +58,7 @@ bits I use to make things work locally...
         }
     },
 ```
+
+#### Building my Precise model
+
+More on that [here](Precise.md).
