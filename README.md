@@ -27,6 +27,8 @@ See [here](Wiki.md) for more on that.
 
 Run the uploader.py in a screen session on a friendly host. Requires flask. May need to edit to adjust listen IP or save directory.  This makes use of the listener.url config.  Swap the mic.py in mycroft-core/mycroft/client/speech for this repo's version.  
 
+Once the personal server is released this will likely be moot. 
+
 #### config
 
 bits I use to make things work locally...
