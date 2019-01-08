@@ -6,7 +6,7 @@ This includes several file changes to help run a local instance of mycroft, and 
 
 Trying to improve local deep speech audio handling. First remove the start_listening noise.  Second, padding the wav file with half a second of silence at the beginning and the end.  
 
-Uses pydub. ```pip3 install pytdub ; sudo apt install ffmpeg``` to usually get these installed on picroft.    
+Uses pydub. ```pip3 install pydub ; sudo apt install ffmpeg``` to usually get these installed on picroft.    
 
 File itself replaces the one in mycroft-core/mycroft/stt/, then restart services. 
 
