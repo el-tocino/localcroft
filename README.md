@@ -11,7 +11,7 @@ Uses pydub. ```pip3 install pytdub ; sudo apt install ffmpeg``` to usually get t
 File itself replaces the one in mycroft-core/mycroft/stt/, then restart services. 
 
 #### m2-tts
-Local Mimic2 tts quickie.  No visimes, no chunking, NO LIMITS!  Does some pseudo-caching of responses.  You have to manually clean that up, though. :)
+Local Mimic2 tts quickie.  No visimes, no chunking, NO LIMITS!  Does some pseudo-caching of responses.  You have to manually clean that up, though.
 
 Move your existing /path/to/mycroft-core/mycroft/tts/mimic2.py to /path/to/mycroft-core/mycroft/tts/default-mimic2.py and then copy this file into its place.
 
