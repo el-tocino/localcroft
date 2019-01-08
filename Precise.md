@@ -2,7 +2,7 @@ The [precise page](https://github.com/MycroftAI/mycroft-precise/wiki/Training-yo
 
 #### data
 
-The more data, the better.  To a point, which is about 50k samples apparently.  I have hit over 300 total wake word and about 5000 fake word samples.  If you're using local uploads, you can review those and add them to your dataset.  Once you have collected your data, try and have an 80/20 training/test split.  ie, for 100 clips, 80 go to the wakewords folder, 20 go to the test/wakewords folder.  
+The more data, the better.  To a point, which is about 50k samples apparently.  I have hit over 320 total wake word and about 5000 fake word samples.  If you're using local uploads, you can review those and add them to your dataset.  Once you have collected your data, try and have an 80/20 training/test split.  ie, for 100 clips, 80 go to the wakewords folder, 20 go to the test/wakewords folder.  
 
 ##### wake words
 
