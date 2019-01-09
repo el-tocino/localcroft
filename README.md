@@ -1,6 +1,6 @@
 ### Local mycroft things
 
-This includes several file changes to help run a local instance of mycroft, and one how-i-did-it for running a local wikipedia copy. They can be used piecemeal or all at once.  
+This includes several file changes to help run a local instance of mycroft, and some how-i-did-it pages for running a local wiki and precise models.
 
 #### localDS-fix
 
