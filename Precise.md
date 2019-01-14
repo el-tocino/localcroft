@@ -27,3 +27,29 @@ Any time you add more data, I find it's best to start training all over.
 For my data, the sweet spot for number of steps appears to be 20-30k.  This gets my val_acc numbers up to the high .99s, sometimes 1.00000.  You can model further if your accuracy isn't there AND it keeps getting closer.  I once modeled to 150k, this wasn't more effective than 50k, and that wasn't noticeably different for my dataset at 30k. My current dataset has about 300 wake words, and 5000 fake words.  My test folder has 55 wake and 900 fake words.  
 
 After the model completes, be sure to run precise-test.  Any false triggers should be reviewed, and new clips recorded to reinforce whatever you see.  A particular fake word? Add three more clips of it.  A slow wake word? Add a few more slow clips. After enabling local uploads, I have managed to almost double my clip count in a bit over a week.  I highly recommend this if you're trying to model custom words.  
+
+Results of precise-test after 125k steps:
+```
+Loading wake-word...
+Loading not-wake-word...
+Using TensorFlow backend.
+Data: <TrainData wake_words=277 not_wake_words=4568 test_wake_words=56 test_not_wake_words=895>
+=== False Positives ===
+athena/test/not-wake-word/fakewords-120.wav
+
+=== False Negatives ===
+
+=== Counts ===
+False Positives: 1
+True Negatives: 894
+False Negatives: 0
+True Positives: 56
+
+=== Summary ===
+950 out of 951
+99.89 %
+
+0.11 % false positives
+0.0 % false negatives
+```
+![tensorboard](https://github.com/el-tocino/localcroft/blob/master/tf-scaled-precise125ksm.png)
