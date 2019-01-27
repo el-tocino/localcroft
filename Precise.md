@@ -53,3 +53,6 @@ True Positives: 56
 0.0 % false negatives
 ```
 ![tensorboard](https://github.com/el-tocino/localcroft/blob/master/tf-scaled-precise125ksm.png)
+
+![val_acc](https://github.com/el-tocino/localcroft/blob/master/precise-train.png)
+![val_loss](https://github.com/el-tocino/localcroft/blob/master/precise-train2.png)
