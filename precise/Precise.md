@@ -6,9 +6,9 @@ The more data, the better.  To a point, which is about 50k samples apparently.  
 
 ##### wake words
 
-I've recorded myself quite a bit for my wake word.  I vary speed, inflection, volume, distance from mic, tone, etc. I have gotten about a dozen other folks to record samples for me, though these tend to be fairly uniform.  Know your target audience, and try and sample them.  The wider the range of samples you have, the better your model should perform.
+I've recorded myself quite a bit for my wake word.  I vary speed, inflection, volume, distance from mic, tone, etc. I have gotten about a dozen other folks to record samples for my model as well.  Your target audience is where you should be sourcing most of your data from.
 
-When recording, I've used a variety of mics.  I have a nice small diaphragm condenser that hits a usb preamp, a cheap usb mic, and a few on a PS Eye.  This isn't necessary, it's just been a matter of what was handy.  I believe that having a good base of clean wake word samples to start with is best.  From there it's a matter of testing to see what is best to record.
+When recording, I've used a variety of mics.  I have a nice small diaphragm condenser that hits a usb preamp, a cheap usb mic, and a few on a PS Eye.  This isn't necessary, it's just been a matter of what was handy.  I believe that having a good base of clean wake word samples to start with is best.  From there it's a matter of testing to see what is best to model.
 
 I have only recently started recording with noisy backgrounds.  Will update once I have better info.
 
@@ -22,7 +22,7 @@ TV shows have also caused a significant number of false activations for me.  Thi
 
 #### modeling
 
-Any time you add more data, I find it's best to start training all over. 
+Any time you add more data, I find it's best to start training all over.  If you aren't reviewing progress on tensorboard, you need to start. 
 
 For my data, the sweet spot for number of steps appears to be 20-30k.  This gets my val_acc numbers up to the high .99s, sometimes 1.00000.  You can model further if your accuracy isn't there AND it keeps getting closer.  I once modeled to 150k, this wasn't more effective than 50k, and that wasn't noticeably different for my dataset at 30k. My current dataset has about 300 wake words, and 5000 fake words.  My test folder has 55 wake and 900 fake words.
 
