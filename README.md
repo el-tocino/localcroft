@@ -4,9 +4,9 @@ This includes several file changes to help run a local instance of mycroft, and 
 
 #### localDS-fix
 
-Trying to improve local deep speech audio handling. First remove the start_listening noise.  Second, padding the wav file with half a second of silence at the beginning and the end.  
+Trying to improve local deep speech audio handling. First remove the start_listening noise.  Second, padding the wav file with half a second of silence at the beginning and the end.
 
-Uses pydub. ```pip3 install pydub ; sudo apt install ffmpeg``` to usually get these installed on picroft.    
+Uses pydub. ```pip3 install pydub ; sudo apt install ffmpeg``` to usually get these installed on picroft.
 
 File itself replaces the one in mycroft-core/mycroft/stt/, then restart services. 
 
@@ -15,7 +15,7 @@ Local Mimic2 tts quickie.  No visimes, no chunking, NO LIMITS!  Does some pseudo
 
 Move your existing /path/to/mycroft-core/mycroft/tts/mimic2.py to /path/to/mycroft-core/mycroft/tts/default-mimic2.py and then copy this file into its place.
 
-If you have a .wav file return tool, this could be modified easily to handle pretty much any end point.
+If you have a TTS that does .wav file return, this could be modified easily to handle pretty much any end point.
 
 See the TTS config bits below for how to configure in your local conf.
 
@@ -25,9 +25,9 @@ See [here](Wiki.md) for more on that.
 
 #### precise uploads
 
-Run the uploader.py in a screen session on a friendly host. Requires flask. May need to edit to adjust listen IP or save directory.  This makes use of the listener.url config.  Swap the mic.py in mycroft-core/mycroft/client/speech for this repo's version.  
+Run the uploader.py in a screen session on a friendly host. Requires flask. May need to edit to adjust listen IP or save directory.  This makes use of the listener.url config.
 
-Once the personal server is released this will likely be moot. 
+Once the personal server is released this will likely be moot.
 
 #### config
 
@@ -61,6 +61,6 @@ bits I use to make things work locally...
     },
 ```
 
-#### Building my Precise model
+#### Building my Precise custom wake word model
 
 More on that [here](precise/Precise.md).
