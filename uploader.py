@@ -15,12 +15,11 @@ def home():
         if fn == 'audio':
             name = (str(int(time.time()))) + ".wav"
             uploads[precisefile].save(os.path.join(app.config['UPLOAD_FOLDER'], name))
-            print("Saved audio file")
+            
         if fn == 'metadata':
             name =  (str(int(time.time()))) + ".meta"
             uploads[precisefile].save(os.path.join(app.config['UPLOAD_FOLDER'], name))
-            print("Saved metadata file")
-
+            
     return jsonify({"status":"ok"})
 
 
