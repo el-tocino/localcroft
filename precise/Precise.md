@@ -19,7 +19,7 @@ I have only recently started recording with noisy backgrounds.  Will update if I
 The precise instructions are a good start, just be ready to add a lot of other stuff.  Thanks to a spate of allergies, I've now added over 100 cough and sniffle clips to my fake words.  My air conditioner cycling used to set it off, so I've recorded the a/c turning on and off. My microwave end tones.  A door closing.  Snores. etc.
 
 As for spoken words, I used a scrabble word finder and rhymezone to target words that rhymed and had similar sounds.  With a list of about 120 of these, I recorded each one three times.  My helper voices usually get a list of fifteen words, containing three instances of my wake word and twelve fake words.  Sometimes there's multi-word combinations that falsely trigger it, these get added to my list and recorded.
-For instance, here's a list of url's to get more fake words, in this case based off of the wake word "martin".  
+For instance, here's a list of url's to get more fake words, in this case based off of the wake word "marvin".  
 
 [rhymes](https://www.rhymezone.com/r/rhyme.cgi?Word=marvin&typeofrhyme=perfect)
 
