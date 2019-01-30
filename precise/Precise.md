@@ -41,6 +41,8 @@ For my data, the sweet spot for number of steps appears to be 20-30k.  This gets
 
 After the model completes, be sure to run precise-test.  Any false triggers should be reviewed, and new clips recorded to reinforce whatever you see.  A particular fake word? Add three more clips of it.  A slow wake word? Add a few more slow clips. After enabling local uploads, I have managed to almost double my wake word clip count in a bit over a week.  I highly recommend this if you're trying to model custom words.
 
+Typical command I run:
+
 ``` precise-train -e 30000 wakeword.net wakeword/ && precise-test wakeword.net wakeword/ ```
 
 Results of precise-test after 125k steps:
