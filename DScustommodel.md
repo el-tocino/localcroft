@@ -9,6 +9,7 @@ https://discourse.mozilla.org/t/tutorial-how-i-trained-a-specific-french-model-t
 
 An extraneous list of steps I used is below.  More than a few are duplicated from the above. This isn't definitive, and will certainly need to be redone over time.  You do NOT need massive resources to compile a small (<10k clips) model, but the larger your GPU the better.  You will need deepspeech, the native_client, kenlm, and python3 installed.  I used a lot of bash for loops to do the majority of the bulk processing steps.
 
+#### Gather your data
 First, I built up my library of clips.  Mimic recording studio can be used to do this.  I had recorded approximately 800 source clips using a combination of common commands I say to mycroft, the top 500 words in the English language, and several papers from arvix on computing topics.  These were recorded in 16 bit, 48khz stereo. Start with the best quality you can, it's easier to make that worse than try and fix bad source material.  If you have saved clips from mycroft, or can easily record noisy or bad voice quality clips, then you should do so.  Described here is a way to augment your data with lower-quality clips.  I have a pair of small diaphragm condensers connected to a usb audio interface.  One mic channel is set for -10db and oriented in approximately 90 degrees from the other in order to make for a slightly different recording on each channel.  I used a short shell script to record a sentence twice, and write out the filename and the transcription to a csv file.  In the csv file you make, it is vitally important that you limit the amount of odd characters, punctuation, and the like.  Also helps to run it through an upper to lower step as well.   
 
 After recording, I used webrtcvad to trim the silence (https://github.com/wiseman/py-webrtcvad/blob/master/example.py):
@@ -33,6 +34,7 @@ c-r-1550042834-20-2.wav,69164,twenty thirty forty fifty
 ```
 Don't knock my sample sentences til you try 'em.  ;)  The header line is necessary in each csv.  
 
+#### Prep Steps
 To make the alphabet.txt file, you'll want to grab all the transcriptions and sort into unique characters.  
 ```cut -d, -f3 test/test.csv >> charlist ;cut -d, -f3 train/train.csv >> charlist; cut -d, -f3 dev/dev.csv >> charlist```
 I found the charparse.cpp* file on the web, and can't find the source now, will edit if I do.  Compile that (g++ -o charparse charparse.cpp), then you can do:
@@ -86,6 +88,7 @@ python3 -u DeepSpeech.py \
 
 Two things to keep in mind here are batch_size and n_hidden.   Batch_size is basically scaling how much of the data to load per training step.  I have an 8gb gpu, and on my dataset this worked.  On yours it might be bigger or smaller.  More data is usually smaller.  Try and keep n_hidden even.  The larger you can scale n_hidden, the better your model may be. Try powers of 2 type numbers (256, 512,1024, etc).  Higher can be better.  If you don't keep batch_size even, you may experience a tiresome warning on inference later.  The early stop parameters are there to help prevent overfitting.  I'd recommend keeping them on for any small training set.   The learning rate, dropout rate, stddev bits you can use if need be, review after first model completes.  
 
+#### Runaway with me...
 After all of that...start a screen session and run your script.  In another screen session, set up tensorboard on the output directory.  Switch back to your training script and see what error it's popped up. It's fairly good about indicating what it's working on when it errors, ie, it parses the csv files and will indicate what character it doesn't like in them.  Fix anything that comes up, and try again.  
 
 Depending on your data's size and your compute resources, go to sleep for the night or check back in ten minutes.  
@@ -132,6 +135,8 @@ To make an mmapped model (from https://github.com/mozilla/DeepSpeech):
 ```
 $ convert_graphdef_memmapped_format --in_graph=output_graph.pb --out_graph=output_graph.pbmm
 ```
+
+#### Results
 
 So how does it work? Eh....depends.  Largely due to my limited training set, it can work on those lines pretty well. Anything beyond that it tends to get way off course.
 "could you tell me the weather in San Francisco" resulted in...
