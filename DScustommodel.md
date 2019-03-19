@@ -86,7 +86,7 @@ python3 -u DeepSpeech.py \
   "$@"
 ```
 
-Two things to keep in mind here are batch_size and n_hidden.   Batch_size is basically scaling how much of the data to load per training step.  I have an 8gb gpu, and on my dataset this worked.  On yours it might be bigger or smaller.  More data is usually smaller.  Try and keep n_hidden even.  The larger you can scale n_hidden, the better your model may be. Try powers of 2 type numbers (256, 512,1024, etc).  Higher can be better.  If you don't keep batch_size even, you may experience a tiresome warning on inference later.  The early stop parameters are there to help prevent overfitting.  I'd recommend keeping them on for any small training set.   The learning rate, dropout rate, stddev bits you can use if need be, review after first model completes.  
+Two things to keep in mind here are batch_size and n_hidden.   Batch_size is basically scaling how much of the data to load per training step.  I have an 8gb gpu, and on my dataset this worked.  On yours it might be bigger or smaller.  More data is usually smaller.  Try and keep n_hidden even.  The larger you can scale n_hidden, the better your model may be, but the slower it will train. I try powers of 2 type numbers (256, 512,1024, etc).  If you don't keep batch_size even, you may experience a tiresome warning on inference later.  The early stop parameters are there to help prevent overfitting.  I'd recommend keeping them on for any small training set.   The learning rate, dropout rate, stddev bits you can use if need be, review after first model completes.  
 
 #### Runaway with me...
 After all of that...start a screen session and run your script.  In another screen session, set up tensorboard on the output directory.  Switch back to your training script and see what error it's popped up. It's fairly good about indicating what it's working on when it errors, ie, it parses the csv files and will indicate what character it doesn't like in them.  Fix anything that comes up, and try again.  
@@ -136,6 +136,8 @@ To make an mmapped model (from https://github.com/mozilla/DeepSpeech):
 $ convert_graphdef_memmapped_format --in_graph=output_graph.pb --out_graph=output_graph.pbmm
 ```
 
+When training, the loss for training should be lower than the validation loss.  If validation is less than training loss, you're likely heading towards overfitting territory.  For smaller datasets, lowering the training rate and increasing the epochs may help. You will need to experiment to find out what works best for your data.  
+
 #### Results
 
 So how does it work? Eh....depends.  Largely due to my limited training set, it can work on those lines pretty well. Anything beyond that it tends to get way off course.
@@ -151,10 +153,9 @@ model is ready.
 STT result: i'm able girls able ship water hallway best surface
 ```
 
-
-
 ### Fine Tune Instead.
 
+#### No really, you should fine tune instead for English.
 The Deepspeech repo's readme (https://github.com/mozilla/DeepSpeech#continuing-training-from-a-release-model) pretty much covers this.   Download the relevant pre-trained model (1.5gb or so compressed--you will want to run this on an ssd for sure).   Verify that your transcription character set (alphabet.txt) matches the one included in the model.  If not, you will have to adjust your transcriptions or you'll run into problems.  As per the readme, you can then just point the following at your csv's you created earlier:
 
 ```
