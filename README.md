@@ -1,6 +1,6 @@
 ### Local mycroft things
 
-This includes several file changes to help run a local instance of mycroft, and some how-i-did-it pages for running a local wiki and precise models.
+This includes several file changes to help run a local instance of mycroft, and some how-i-did-it pages for running local resources.
 
 #### localDS-fix
 
@@ -64,3 +64,7 @@ bits I use to make things work locally...
 #### Building my Precise custom wake word model
 
 More on that [here](precise/Precise.md).
+
+#### Customizing Deepspeech
+
+[here](DScustommodel.md)
