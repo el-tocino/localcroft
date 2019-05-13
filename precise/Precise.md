@@ -1,5 +1,7 @@
 The [precise page](https://github.com/MycroftAI/mycroft-precise/wiki/Training-your-own-wake-word#how-to-train-your-own-wake-word) has good instructions to get you started.  
 
+Note the below is for an older version of precise, will be updated after I have sufficient time to evaluate the newer version.  
+
 #### data
 
 You need more data. 
