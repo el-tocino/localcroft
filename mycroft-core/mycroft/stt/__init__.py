@@ -164,6 +164,12 @@ class DeepSpeechServerSTT(STT):
     def __init__(self):
         super(DeepSpeechServerSTT, self).__init__()
 
+
+    def match_target_amplitude(sound, target_dBFS):
+        change_in_dBFS = target_dBFS - sound.dBFS
+        return sound.apply_gain(change_in_dBFS)
+
+
     def execute(self, audio, language=None):
         language = language or self.lang
         short_silence = AudioSegment.silent(duration=500, frame_rate=16000)
@@ -173,9 +179,11 @@ class DeepSpeechServerSTT(STT):
         ds_audio = short_silence + temp_audio[trim_length:] + short_silence
         #ds_audio = short_silence + temp_audio + short_silence
         ds_audio = ds_audio.set_channels(1)
-        ds_audio.export("/ramdisk/ds_audio.wav",format="wav")
-        stt_audio = open("/ramdisk/ds_audio.wav", "rb")
+        normalized_sound = match_target_amplitude(ds_audio, -20.0)
+        ds_audio.export("/tmp/mycroft/cache/stt/ds_audio.wav",format="wav")
+        stt_audio = open("/tmp/mycroft/cache/stt/ds_audio.wav", "rb")
         response = post(self.config.get("uri"), data=stt_audio.read())
+        response2 = post(self.config.get("uri"), data=normalized_sound.read())
         return response.text
 
 
