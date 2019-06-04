@@ -25,6 +25,8 @@ See [here](Wiki.md) for more on that.
 
 #### precise uploads
 
+A [recent PR](https://github.com/MycroftAI/mycroft-core/pull/2141) has also added local saving of wake words! This can be substituted if preferred to uploading.  
+
 Run the uploader.py in a screen session on a friendly host. Requires flask. May need to edit to adjust listen IP or save directory.  This makes use of the listener.url config.
 
 Once the personal server is released this will likely be moot.
