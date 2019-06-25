@@ -12,9 +12,9 @@ An extraneous list of steps I used is below.  More than a few are duplicated fro
 #### Gather your data
 First, I built up my library of clips.  [Mimic recording studio](https://github.com/MycroftAI/mimic-recording-studio) can be used to do this.  I had recorded approximately 800 source clips using a combination of common commands I say to mycroft, the top 500 words in the English language, and several papers from arvix on computing topics.  These were recorded in 16 bit, 48khz stereo. Start with the best quality you can, it's easier to make that worse than try and fix bad source material.  If you have saved clips from mycroft, or can easily record noisy or bad voice quality clips, then you should do so.  Described here is a way to augment your data with lower-quality clips.  I have a pair of small diaphragm condensers connected to a usb audio interface.  One mic channel is set for -10db and oriented in approximately 90 degrees from the other in order to make for a slightly different recording on each channel.  I used a short shell script to record a sentence twice, and write out the filename and the transcription to a csv file.  In the csv file you make, it is vitally important that you limit the amount of odd characters, punctuation, and the like.  Also helps to run it through an upper to lower step as well.   
 
-After recording, I used webrtcvad to trim the silence (https://github.com/wiseman/py-webrtcvad/blob/master/example.py):
+After recording, I used [webrtcvad](https://github.com/wiseman/py-webrtcvad/blob/master/example.py) to trim the silence:
 ```python3 example.py 1 yourwavefilehere.wav```
-This sometimes results in two wave files emerging, usually just one if you're recorded cleanly enough. You should watch for multiples and pick the correct one as needed.  I then used sox (http://sox.sourceforge.net/) to split the files into left and right channel wavs at 16 bit,16khz mono.  
+This sometimes results in two wave files emerging, usually just one if you're recorded cleanly enough. You should watch for multiples and pick the correct one as needed.  I then used [sox](http://sox.sourceforge.net/) to split the files into left and right channel wavs at 16 bit,16khz mono.  
 ``` $ sox $i l-$i remix 1```
 ``` $ sox $i r-$i remix 2```
 Additionally, I recorded a short clip of background noise in my house (hey it's where I'll use this most).  With one channel's wav files, I combined the noise and saved those as an additional set of clips.  
@@ -49,7 +49,7 @@ Now we build files to model with. Not going to pretend I know what each of these
 ```$ build_binary -T -s words.arpa  lm.binary```
 ```$ generate_trie alphabet.txt lm.binary trie```
 
-In your Deepspeech folder (I used /opt/DeepSpeech), edit your run file.  Here's mine for fun:
+In your Deepspeech folder (I used /opt/ for stuff), edit your run file.  Here's mine for fun:
 ```
 #!/bin/sh
 set -xe
@@ -156,7 +156,7 @@ STT result: i'm able girls able ship water hallway best surface
 ### Fine Tune Instead.
 
 #### No really, you should fine tune instead for English.
-The Deepspeech repo's readme (https://github.com/mozilla/DeepSpeech#continuing-training-from-a-release-model) pretty much covers this.   Download the relevant pre-trained model (1.5gb or so compressed--you will want to run this on an ssd for sure).   Verify that your transcription character set (alphabet.txt) matches the one included in the model.  If not, you will have to adjust your transcriptions or you'll run into problems.  As per the readme, you can then just point the following at your csv's you created earlier:
+The Deepspeech repo's [readme](https://github.com/mozilla/DeepSpeech#continuing-training-from-a-release-model) pretty much covers this.   Download the relevant pre-trained model (1.5gb or so compressed--you will want to run this on an ssd for sure).   Verify that your transcription character set (alphabet.txt) matches the one included in the model.  If not, you will have to adjust your transcriptions or you'll run into problems.  As per the readme, you can then just point the following at your csv's you created earlier:
 
 ```
 python3 DeepSpeech.py --n_hidden 2048 --checkpoint_dir path/to/checkpoint/folder --epoch -3 --train_files path/to/my-train.csv --dev_files path/to/my-dev.csv --test_files path/to/my_dev.csv --learning_rate 0.0001   --export_dir /opt/deepspeech/results/model_export/ 
