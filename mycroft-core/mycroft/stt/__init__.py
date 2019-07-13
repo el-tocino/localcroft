@@ -178,6 +178,7 @@ class DeepSpeechServerSTT(STT):
         trim_length = (-(duration - 210))
         ds_audio = short_silence + temp_audio[trim_length:] + short_silence
         #ds_audio = short_silence + temp_audio + short_silence
+        # add a low_pass_filter(3000) and high (200) to help isolate and improve recog
         ds_audio = ds_audio.set_channels(1)
         normalized_sound = match_target_amplitude(ds_audio, -20.0)
         ds_audio.export("/tmp/mycroft/cache/stt/ds_audio.wav",format="wav")
