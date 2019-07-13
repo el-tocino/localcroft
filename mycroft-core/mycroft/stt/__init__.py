@@ -181,7 +181,7 @@ class DeepSpeechServerSTT(STT):
         ds_audio = ds_audio.set_channels(1)
         ds_audio = ds_audio.low_pass_filter(3000)
         ds_audio = ds_audio.high_pass_filter(200)
-        normalized_sound = match_target_amplitude(ds_audio, -10.0)
+        ds_audio = match_target_amplitude(ds_audio, -16.0)
         ds_audio.export("/tmp/mycroft/cache/stt/ds_audio.wav",format="wav")
         stt_audio = open("/tmp/mycroft/cache/stt/ds_audio.wav", "rb")
         response = post(self.config.get("uri"), data=stt_audio.read())
