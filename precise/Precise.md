@@ -43,7 +43,7 @@ Any time you add more data, I find it's best to start training all over.  If you
 
 For my data, the sweet spot for number of steps appears to be 350, batch size 5000, and sensitivity of .8. YOUR DATA WILL LIKELY NEED DIFFERENT PARAMETERS TO MAKE AN OPTIMUM MODEL.  This gets my val_acc numbers up to the high .999s.  You can model further if your accuracy (val_acc on tensorboard) isn't that high AND it keeps getting closer.  I've modeled to 1k, this wasn't more effective than 500. 
 
-After the model completes, be sure to run precise-test.  Any false triggers should be reviewed, and new clips recorded to reinforce whatever you see.  A particular fake word? Add three more clips of it.  A slow wake word? Add a few more slow clips. After enabling local uploads, I have managed to almost double my wake word clip count in a bit over a week.  I highly recommend this if you're trying to model custom words.  The uploader can be pulled from this repo and run without having to run a local backend.
+After the model completes, be sure to run precise-test.  Any false triggers should be reviewed, and new clips recorded to reinforce whatever you see.  A particular fake word? Add three more clips of it.  A slow wake word? Add a few more slow clips. After enabling local uploads on mycroft, I have managed to almost double my wake word clip count.  I highly recommend this if you're trying to model custom words.  The uploader can be pulled from this repo and run without having to run a local backend.
 
 Typical command I run:
 
