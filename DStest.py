@@ -20,8 +20,8 @@ def denoise(filename):
     #audio, sample_rate = rnnoise.read_wave(filename)
     refreq = AudioSegment.from_wav(filename)
     refreq = refreq.set_frame_rate(48000)
-    refreq.export('/tmp/dnn.wav',format='wav')
-    blah = wave.open('/tmp/dnn.wav','rb')
+    refreq.export('dnntemp.wav',format='wav')
+    blah = wave.open('dnntemp.wav','rb')
     blah = blah.readframes(blah.getnframes())
     frames = rnnoise.frame_generator(10, blah, TARGET_SR)
     frames = list(frames)
@@ -30,17 +30,11 @@ def denoise(filename):
     np_audio = np.concatenate([np.frombuffer(frame,
                                              dtype=np.int16)
                                for frame in denoised_frames])
-    wavfile.write('test_denoised.wav',
-              48000,
-              np_audio)
-    #wav_sample = np_audio[1]
-    #sample_rate, wav_sample = np_audio
     segment = AudioSegment(data=np_audio.tobytes(),
                        sample_width=2,
                        frame_rate=48000, channels=1)
-    nsdn_audio = segment.set_frame_rate(16000)
-    #nsdn_audio.export("/tmp/ndn2_audio.wav",format="wav")
-    return nsdn_audio
+    dn_audio = segment.set_frame_rate(16000)
+    return dn_audio
 
 dsurl = 'http://192.168.10.240:1880/stt'
 start_time = time.time()
@@ -58,7 +52,7 @@ ds_audio = ds_audio.set_channels(1)
 print ("one channel", elapsedtime())
 ds_audio = ds_audio.low_pass_filter(3200)
 print ("low pass", elapsedtime())
-ds_audio = ds_audio.high_pass_filter(300)
+ds_audio = ds_audio.high_pass_filter(350)
 print ("high pass", elapsedtime())
 ns_audio = match_target_amplitude(ds_audio, -22.0)
 print ("normalizing done.", elapsedtime())
