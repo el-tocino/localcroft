@@ -1,27 +1,39 @@
-from requests import post, put, exceptions
-from pydub import AudioSegment
-import sys
-import rnnoise
-import numpy as np
+"""
+run various adjustments on a wav file to see how it compares
+when being transcribed by a deepspeech instance.
+"""
+import argparse
 import time
 import wave
+import numpy as np
 from scipy.io import wavfile
+from requests import post, put, exceptions
+from pydub import AudioSegment
+import rnnoise
 
 def elapsedtime():
-    elt = time.time() - start_time
+    """
+    count time since start
+    """
+    elt = time.time() - (start_time)
     return elt
 
-def match_target_amplitude(sound, target_dBFS):
+def normalize(sound, target_dBFS):
+    """
+    normalize clip
+    """
     change_in_dBFS = target_dBFS - sound.dBFS
     return sound.apply_gain(change_in_dBFS)
 
-def denoise(filename):
+def denoise(sound):
+    """
+    denoise clip via rnnoise
+    """
     TARGET_SR = 48000
     #audio, sample_rate = rnnoise.read_wave(filename)
-    refreq = AudioSegment.from_wav(filename)
-    refreq = refreq.set_frame_rate(48000)
-    refreq.export('dnntemp.wav',format='wav')
-    blah = wave.open('dnntemp.wav','rb')
+    sound = sound.set_frame_rate(TARGET_SR)
+    sound.export('dnntemp.wav', format='wav')
+    blah = wave.open('dnntemp.wav', 'rb')
     blah = blah.readframes(blah.getnframes())
     frames = rnnoise.frame_generator(10, blah, TARGET_SR)
     frames = list(frames)
@@ -31,79 +43,73 @@ def denoise(filename):
                                              dtype=np.int16)
                                for frame in denoised_frames])
     segment = AudioSegment(data=np_audio.tobytes(),
-                       sample_width=2,
-                       frame_rate=48000, channels=1)
-    dn_audio = segment.set_frame_rate(16000)
-    return dn_audio
+                           sample_width=2,
+                           frame_rate=48000, channels=1)
+    segment = segment.set_frame_rate(16000)
+    return segment
 
-dsurl = 'http://192.168.10.240:1880/stt'
+def hpass(sound, freq):
+    """
+    high-pass filter on clip.
+    """
+    sound = sound.high_pass_filter(int(freq))
+    return sound
+
+def lpass(sound, freq):
+    """
+    low-pass filter on clip
+    """
+    sound = sound.low_pass_filter(int(freq))
+    return sound
+
+def transcribe(filename):
+    """
+    Send clip to deepspeech server
+    """
+    transaudio = open(filename, "rb")
+    response = post(dsurl, data=transaudio.read())
+    return response
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("wavfile", help="wav file to test on.")
+parser.add_argument("-H", "--highpass", help="high pass frequency.")
+parser.add_argument("-L", "--lowpass", help="low pass frequency.")
+parser.add_argument("-U", "--url", help="Deepspeech Server URL.", required="True")
+parser.add_argument("-D", "--denoise", help="de-noise clip.", action="store_true")
+parser.add_argument("-N", "--normalize", help="normalize clip.", action="store_true")
+parser.add_argument("--targetdb", default=-22.0, help="DB target for normalize. (optional)")
+args = parser.parse_args()
+
+afn = args.wavfile
+dsurl = args.url
 start_time = time.time()
 print (start_time)
-afn = sys.argv[1]
-def_audio = open(afn, "rb")
-short_silence = AudioSegment.silent(duration=250, frame_rate=16000)
-temp_audio = AudioSegment.from_wav(afn)
-#duration = len(temp_audio)
-#trim_length = (-(duration - 110))
-ds_audio = short_silence + temp_audio + short_silence
-print ("silence added.", elapsedtime())
-# add a low_pass_filter(3000) and high (200) to help isolate and improve recog
+ds_audio = AudioSegment.from_wav(afn)
 ds_audio = ds_audio.set_channels(1)
-print ("one channel", elapsedtime())
-ds_audio = ds_audio.low_pass_filter(3200)
-print ("low pass", elapsedtime())
-ds_audio = ds_audio.high_pass_filter(350)
-print ("high pass", elapsedtime())
-ns_audio = match_target_amplitude(ds_audio, -22.0)
-print ("normalizing done.", elapsedtime())
-ds_audio.export("/tmp/ds_audio.wav",format="wav")
-ns_audio.export("/tmp/ns_audio.wav",format="wav")
-print ("saved first two formats.", elapsedtime())
-dn_audio = denoise('/tmp/ds_audio.wav')
-dn_audio.export("/tmp/dn_audio.wav",format="wav")
-print ("filtered denoised", elapsedtime())
-dnz_audio = denoise('/tmp/ns_audio.wav')
-dnz_audio.export("/tmp/dnz_audio.wav",format="wav")
-print ("filtered normalized denoised", elapsedtime())
-nzdn_audio = match_target_amplitude(dn_audio, -22.0)
-nzdn_audio.export("/tmp/nzdn_audio.wav",format="wav")
-print ("filtered denoised normalized", elapsedtime())
-ordn_audio = denoise(afn)
-ordn_audio.export("/tmp/odn_audio.wav",format="wav")
-print ("denoised original", elapsedtime())
-dfnz_audio = ordn_audio.low_pass_filter(3200)
-dfnz_audio = dfnz_audio.high_pass_filter(300)
-dfnz_audio = match_target_amplitude(dfnz_audio, -22.0)
-dfnz_audio.export("/tmp/dfz_audio.wav",format="wav")
-print ("denoise filter normalize", elapsedtime())
-stt_audio = open("/tmp/ds_audio.wav", "rb")
-ntt_audio = open("/tmp/ns_audio.wav", "rb")
-jdn_audio = open("/tmp/dn_audio.wav", "rb") 
-nzd_audio = open("/tmp/nzdn_audio.wav", "rb")
-dnn_audio = open("/tmp/dnz_audio.wav", "rb")
-odn_audio = open("/tmp/odn_audio.wav", "rb")
-dfz_audio = open("/tmp/dfz_audio.wav", "rb")
-print ("Querying DS server for transcript of default wav", elapsedtime())
-responsed = post(dsurl, data=def_audio.read())
-print ("now frequency filtered...",elapsedtime())
-response1 = post(dsurl, data=stt_audio.read())
-print ("and normalized...", elapsedtime())
-response2 = post(dsurl, data=ntt_audio.read())
-print ("and just de-noised...", elapsedtime())
-response3 = post(dsurl, data=jdn_audio.read())
-print ("and de-noised + normalized...", elapsedtime())
-response4 = post(dsurl, data=dnn_audio.read())
-print ("and normalized + denoised...",elapsedtime())
-response5 = post(dsurl, data=nzd_audio.read())
-print ("and original denoised...",elapsedtime())
-response6 = post(dsurl, data=odn_audio.read())
-print ("denoize+filter+normalized...",elapsedtime())
-response7 = post(dsurl, data=dfz_audio.read())
-print ("original:", responsed.text)
-print ("filtered only:", response1.text)
-print ("filter+normalized:", response2.text)
-print ("filter+denoise:",response3.text)
-print ("filter+normalize+denoise:",response4.text)
-print ("filter+denoise+normalize:",response5.text)
-print ("denoise only:", response6.text)
-print ("denoise+filter+normalize:", response7.text)
+short_silence = AudioSegment.silent(duration=250, frame_rate=16000)
+ds_audio = short_silence + ds_audio + short_silence
+print ("padding added", elapsedtime())
+
+if args.lowpass is not None:
+    ds_audio = lpass(ds_audio, args.lowpass)
+    print (elapsedtime())
+
+if args.highpass is not None:
+    ds_audio = hpass(ds_audio, args.highpass)
+    print (elapsedtime())
+
+if args.denoise == 'True':
+    ds_audio = denoise(ds_audio)
+    print (elapsedtime())
+
+if args.normalize == 'True':
+    ds_audio = normalize(ds_audio, args.targetdb)
+    print (elapsedtime())
+
+ds_audio.export('filteredclip.wav', format='wav')
+
+print (transcribe(afn).text)
+print (elapsedtime())
+print (transcribe('filteredclip.wav').text)
+print (elapsedtime())
