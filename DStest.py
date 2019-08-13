@@ -1,3 +1,7 @@
+"""
+run various adjustments on a wav file to see how it compares
+when being transcribed by a deepspeech instance.
+"""
 import argparse
 import time
 import wave
