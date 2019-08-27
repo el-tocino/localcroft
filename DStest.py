@@ -5,6 +5,7 @@ when being transcribed by a deepspeech instance.
 import argparse
 import time
 import wave
+import logging
 import numpy as np
 #from scipy.io import wavfile
 from requests import post
@@ -87,7 +88,6 @@ def transcribe(filename):
     response = post(dsurl, data=transaudio.read())
     return response
 
-
 parser = argparse.ArgumentParser()
 parser.add_argument("wavfile", help="wav file to test on.")
 parser.add_argument("-H", "--highpass", help="high pass frequency.")
@@ -95,41 +95,54 @@ parser.add_argument("-L", "--lowpass", help="low pass frequency.")
 parser.add_argument("-U", "--url", help="Deepspeech Server URL.", required="True")
 parser.add_argument("-D", "--denoise", help="de-noise clip.", action="store_true")
 parser.add_argument("-N", "--normalize", help="normalize clip.", action="store_true")
-parser.add_argument("-O", "--order", default="hldn", help="order of filters.")
-parser.add_argument("--targetdb", default=-22.0, help="DB target for normalize. (optional)")
+parser.add_argument(
+    "-O", "--order", 
+    default="hldn", 
+    help="order of filters.  Optional. HLDN would be Highpass, Lowpass, denoise, then normalize. If order is specified, only items included are run.  N = normalize    D = de-noise    L = low pass filter    H = high pass filter")
+parser.add_argument(
+    '-v', '--verbose',
+    help="Be verbose",
+    action="store_true")
+parser.add_argument(
+    "--targetdb", 
+    default=-22.0, 
+    help="Decibel target for normalize. (optional)")
 args = parser.parse_args()
+
+if args.verbose:
+    logging.basicConfig(level=logging.DEBUG)
 
 afn = args.wavfile
 dsurl = args.url
 start_time = time.time()
-print(start_time)
+
 ds_audio = AudioSegment.from_wav(afn)
 ds_audio = ds_audio.set_channels(1)
 short_silence = AudioSegment.silent(duration=250, frame_rate=16000)
 ds_audio = short_silence + ds_audio + short_silence
-print("padding added", elapsedtime())
+logging.debug("padding added %f", elapsedtime())
 
 for filter in list(args.order):
-    print(filter)
     if filter.lower() == 'n' and args.normalize == True:
         ds_audio = normalize(ds_audio, args.targetdb)
-        print("normalizing", elapsedtime())
+        logging.debug("normalizing: %f" ,elapsedtime())
 
     if filter.lower() == 'l' and args.lowpass is not None:
         ds_audio = lpass(ds_audio, args.lowpass)
-        print("lowpass", elapsedtime())
+        logging.debug("lowpass %f", elapsedtime())
 
     if filter.lower() == 'h' and args.highpass is not None:
         ds_audio = hpass(ds_audio, args.highpass)
-        print("highpass", elapsedtime())
+        logging.debug("highpass %f", elapsedtime())
 
     if filter.lower() == 'd' and args.denoise == True:
         ds_audio = dnoise(ds_audio)
-        print("de-noising", elapsedtime())
+        logging.debug("de-noising %f", elapsedtime())
 
 ds_audio.export('filteredclip.wav', format='wav')
 
-print(transcribe(afn).text)
-print(elapsedtime())
-print(transcribe('filteredclip.wav').text)
-print(elapsedtime())
+print("Original:", transcribe(afn).text)
+logging.debug("%f", elapsedtime())
+
+print("Filtered:", transcribe('filteredclip.wav').text)
+logging.debug("%f", elapsedtime())
