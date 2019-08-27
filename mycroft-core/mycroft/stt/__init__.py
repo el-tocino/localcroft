@@ -172,16 +172,17 @@ class DeepSpeechServerSTT(STT):
 
     def execute(self, audio, language=None):
         language = language or self.lang
-        short_silence = AudioSegment.silent(duration=500, frame_rate=16000)
+        short_silence = AudioSegment.silent(duration=250, frame_rate=16000)
         temp_audio = AudioSegment.from_file(BytesIO(audio.get_wav_data()))
         duration = len(temp_audio)
-        trim_length = (-(duration - 110))
-        ds_audio = short_silence + temp_audio[trim_length:] + short_silence
+        #trim_length = (-(duration - 110)) # use to trim lead in chime
+        #ds_audio = short_silence + temp_audio[trim_length:] + short_silence
+        ds_audio = short_silence + temp_audio + short_silence
         # add a low_pass_filter(3000) and high (200) to help isolate and improve recog
         ds_audio = ds_audio.set_channels(1)
         ds_audio = ds_audio.low_pass_filter(3000)
-        ds_audio = ds_audio.high_pass_filter(200)
-        ds_audio = match_target_amplitude(ds_audio, -17.0)
+        ds_audio = ds_audio.high_pass_filter(350)
+        ds_audio = match_target_amplitude(ds_audio, -19.0)
         ds_audio.export("/tmp/mycroft/cache/stt/ds_audio.wav",format="wav")
         stt_audio = open("/tmp/mycroft/cache/stt/ds_audio.wav", "rb")
         response = post(self.config.get("uri"), data=stt_audio.read())
