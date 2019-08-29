@@ -36,6 +36,7 @@ Once the personal server is released this will likely be moot.
 bits I use to make things work locally...
 ```
   "listener": {
+    "wake_word": "yourwordhere",
     "wake_word_upload": {
       "disable": false,
       "url": "http://127.0.0.1:4000/precise/upload"
