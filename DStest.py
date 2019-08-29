@@ -95,6 +95,7 @@ parser.add_argument("-L", "--lowpass", help="low pass frequency.")
 parser.add_argument("-U", "--url", help="Deepspeech Server URL.", required="True")
 parser.add_argument("-D", "--denoise", help="de-noise clip.", action="store_true")
 parser.add_argument("-N", "--normalize", help="normalize clip.", action="store_true")
+parser.add_argument("-S", "--skip", help="skip transcribe on original clip.", action="store_true")
 parser.add_argument(
     "-O", "--order", 
     default="hldn", 
@@ -141,8 +142,9 @@ for filter in list(args.order):
 
 ds_audio.export('filteredclip.wav', format='wav')
 
-print("Original:", transcribe(afn).text)
-logging.debug("%f", elapsedtime())
+if args.skip is None:
+    print("Original:", transcribe(afn).text)
+    logging.debug("%f", elapsedtime())
 
 print("Filtered:", transcribe('filteredclip.wav').text)
 logging.debug("%f", elapsedtime())
