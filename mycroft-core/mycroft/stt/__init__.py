@@ -172,7 +172,7 @@ class DeepSpeechServerSTT(STT):
 
     def execute(self, audio, language=None):
         language = language or self.lang
-        short_silence = AudioSegment.silent(duration=250, frame_rate=16000)
+        short_silence = AudioSegment.silent(duration=100, frame_rate=16000)
         temp_audio = AudioSegment.from_file(BytesIO(audio.get_wav_data()))
         duration = len(temp_audio)
         #trim_length = (-(duration - 110)) # use to trim lead in chime
