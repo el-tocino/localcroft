@@ -7,7 +7,6 @@ import time
 import wave
 import logging
 import numpy as np
-#from scipy.io import wavfile
 from requests import post
 from pydub import AudioSegment
 import rnnoise
@@ -34,13 +33,12 @@ def frame_generator(frame_duration_ms,
     the sample rate.
     Yields Frames of the requested duration.
     """
-    n = int(sample_rate * (frame_duration_ms / 1000.0) * 2)
+    nums = int(sample_rate * (frame_duration_ms / 1000.0) * 2)
     offset = 0
-    timestamp = 0.0
-    duration = (float(n) / sample_rate) / 2.0
-    while offset + n < len(audio):
-        yield audio[offset:offset + n]
-        offset += n       
+    #duration = (float(nums) / sample_rate) / 2.0
+    while offset + nums < len(audio):
+        yield audio[offset:offset + nums]
+        offset += nums
 
 def dnoise(sound):
     """
@@ -80,6 +78,14 @@ def lpass(sound, freq):
     sound = sound.low_pass_filter(int(freq))
     return sound
 
+def padding(sound):
+    """
+    add a brief bit of silence to beginning and end of clip
+    """
+    short_silence = AudioSegment.silent(duration=100, frame_rate=16000)
+    sound = short_silence + sound + short_silence
+    return sound
+
 def transcribe(filename):
     """
     Send clip to deepspeech server
@@ -90,23 +96,23 @@ def transcribe(filename):
 
 parser = argparse.ArgumentParser()
 parser.add_argument("wavfile", help="wav file to test on.")
-parser.add_argument("-H", "--highpass", help="high pass frequency.")
-parser.add_argument("-L", "--lowpass", help="low pass frequency.")
+parser.add_argument("-H", "--highpass", help="high pass frequency.", default=200)
+parser.add_argument("-L", "--lowpass", help="low pass frequency.", default=8000)
 parser.add_argument("-U", "--url", help="Deepspeech Server URL.", required="True")
 parser.add_argument("-D", "--denoise", help="de-noise clip.", action="store_true")
 parser.add_argument("-N", "--normalize", help="normalize clip.", action="store_true")
-parser.add_argument("-S", "--skip", help="skip transcribe on original clip.", action="store_true")
+parser.add_argument("-S", "--silence", help="add silent padding to clip", action="store_true")
 parser.add_argument(
-    "-O", "--order", 
-    default="hldn", 
-    help="order of filters.  Optional. HLDN would be Highpass, Lowpass, denoise, then normalize. If order is specified, only items included are run.  N = normalize    D = de-noise    L = low pass filter    H = high pass filter")
+    "-O", "--order",
+    default="shldn",
+    help="order of filters.  Optional. HLDN would be Highpass, Lowpass, denoise, then normalize. If order is specified, only items included are run.  S = add silent padding  N = normalize   D = de-noise   L = low pass filter   H = high pass filter")
 parser.add_argument(
     '-v', '--verbose',
     help="Be verbose",
     action="store_true")
 parser.add_argument(
-    "--targetdb", 
-    default=-22.0, 
+    "--targetdb",
+    default=-22.0,
     help="Decibel target for normalize. (optional)")
 args = parser.parse_args()
 
@@ -119,32 +125,30 @@ start_time = time.time()
 
 ds_audio = AudioSegment.from_wav(afn)
 ds_audio = ds_audio.set_channels(1)
-short_silence = AudioSegment.silent(duration=250, frame_rate=16000)
-ds_audio = short_silence + ds_audio + short_silence
-logging.debug("padding added %f", elapsedtime())
 
-for filter in list(args.order):
-    if filter.lower() == 'n' and args.normalize == True:
+
+for filters in list(args.order):
+    if filters.lower() == 's':
+        ds_audio = padding(ds_audio)
+        logging.debug("padding added %f", elapsedtime())
+
+    if filters.lower() == 'n' and args.normalize == True:
         ds_audio = normalize(ds_audio, args.targetdb)
-        logging.debug("normalizing: %f" ,elapsedtime())
+        logging.debug("normalizing: %f", elapsedtime())
 
-    if filter.lower() == 'l' and args.lowpass is not None:
+    if filters.lower() == 'l' and args.lowpass is not None:
         ds_audio = lpass(ds_audio, args.lowpass)
         logging.debug("lowpass %f", elapsedtime())
 
-    if filter.lower() == 'h' and args.highpass is not None:
+    if filters.lower() == 'h' and args.highpass is not None:
         ds_audio = hpass(ds_audio, args.highpass)
         logging.debug("highpass %f", elapsedtime())
 
-    if filter.lower() == 'd' and args.denoise == True:
+    if filters.lower() == 'd' and args.denoise == True:
         ds_audio = dnoise(ds_audio)
         logging.debug("de-noising %f", elapsedtime())
 
 ds_audio.export('filteredclip.wav', format='wav')
-
-if args.skip is None:
-    print("Original:", transcribe(afn).text)
-    logging.debug("%f", elapsedtime())
 
 print("Filtered:", transcribe('filteredclip.wav').text)
 logging.debug("%f", elapsedtime())

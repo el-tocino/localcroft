@@ -2,34 +2,39 @@
 
 This includes several file changes to help run a local instance of mycroft, and some how-i-did-it pages for running local resources.
 
-#### localDS-fix
+#### Building my Precise custom wake word model
 
-Trying to improve local deep speech audio handling. First remove the start_listening noise.  Second, padding the wav file with half a second of silence at the beginning and the end.
+More on that [here](precise/Precise.md).
 
-Uses pydub. ```pip3 install pydub ; sudo apt install ffmpeg``` to usually get these installed on picroft.
+#### Customizing Deepspeech
+
+[here](DScustommodel.md)
+
+#### Mycroft client DeepSpeech STT adjustments
+
+Trying to improve local deep speech audio handling. First remove the start_listening noise.  Second, padding the wav file with .25 seconds of silence at the beginning and the end.
+
+Uses pydub. ```sudo apt install ffmpeg; sudo pip3 install pydub ``` to usually get these installed on picroft.
 
 File itself replaces the one in mycroft-core/mycroft/stt/, then restart services. 
 
-#### m2-tts
-Local Mimic2 tts quickie.  No visimes, no chunking, NO LIMITS!  Does some pseudo-caching of responses.  You have to manually clean that up, though.
+#### WAV TTS connector
 
-Move your existing /path/to/mycroft-core/mycroft/tts/mimic2.py to /path/to/mycroft-core/mycroft/tts/default-mimic2.py and then copy this file into its place.
-
-If you have a TTS that does .wav file return, this could be modified easily to handle pretty much any end point.
+Local Mimic2 tts quickie.  No visimes, no chunking, NO LIMITS!  Does some pseudo-caching of responses.  You have to manually clean that up, though.  Move your existing /path/to/mycroft-core/mycroft/tts/mimic2.py to /path/to/mycroft-core/mycroft/tts/default-mimic2.py and then copy this file into its place.  If you have a TTS that does .wav file return, this could be modified easily to handle pretty much any end point.
 
 See the TTS config bits below for how to configure in your local conf.
 
-#### Wiki
+#### Local Wikipedia
 
 See [here](Wiki.md) for more on that.
 
 #### precise uploads
 
-A [recent PR](https://github.com/MycroftAI/mycroft-core/pull/2141) has also added local saving of wake words! This can be substituted if preferred to uploading.  
+A [recent PR](https://github.com/MycroftAI/mycroft-core/pull/2141) has also added local saving of wake words! This can be substituted if preferred to uploading.
 
 Run the uploader.py in a screen session on a friendly host. Requires flask. May need to edit to adjust listen IP or save directory.  This makes use of the listener.url config.
 
-Once the personal server is released this will likely be moot.
+Selene backend and updated personal server should handle this more directly if you go that route.
 
 #### config
 
@@ -63,11 +68,3 @@ bits I use to make things work locally...
         }
     },
 ```
-
-#### Building my Precise custom wake word model
-
-More on that [here](precise/Precise.md).
-
-#### Customizing Deepspeech
-
-[here](DScustommodel.md)
