@@ -8,7 +8,7 @@ More on that [here](precise/Precise.md).
 
 #### Mycroft client DeepSpeech STT adjustments
 
-Trying to improve local deep speech audio handling. First remove the start_listening noise.  Second, padding the wav file with .25 seconds of silence at the beginning and the end.
+Trying to improve local deep speech audio handling. First remove the start_listening noise.  Second, padding the wav file with .1 seconds of silence at the beginning and the end.
 
 Uses pydub. ```sudo apt install ffmpeg; sudo pip3 install pydub ``` to usually get these installed on picroft.
 
