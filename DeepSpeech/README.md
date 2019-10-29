@@ -1,3 +1,8 @@
+
+#### Custom/fine-tuning models
+
+See [here](DScustommodel.md)
+
 #### DStest.py
 
 This tool can be used to query a deepspeech-server instance using various filtering mechanisms.  For de-noising, requires the [xipn rnnoise](https://github.com/xiph/rnnoise) library to be compiled and installed and [this](https://github.com/Shb742/rnnoise_python) to be locally available (also included in this repo).  For the future, will add filter to make the silence padding optional as well.

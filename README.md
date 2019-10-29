@@ -6,10 +6,6 @@ This includes several file changes to help run a local instance of mycroft, and 
 
 More on that [here](precise/Precise.md).
 
-#### Customizing Deepspeech
-
-[here](DScustommodel.md)
-
 #### Mycroft client DeepSpeech STT adjustments
 
 Trying to improve local deep speech audio handling. First remove the start_listening noise.  Second, padding the wav file with .25 seconds of silence at the beginning and the end.
@@ -17,6 +13,10 @@ Trying to improve local deep speech audio handling. First remove the start_liste
 Uses pydub. ```sudo apt install ffmpeg; sudo pip3 install pydub ``` to usually get these installed on picroft.
 
 File itself replaces the one in mycroft-core/mycroft/stt/, then restart services. 
+
+#### non-mycroft Deepspeech stuff
+
+[here](DeepSpeech)
 
 #### WAV TTS connector
 
