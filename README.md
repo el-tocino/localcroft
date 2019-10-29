@@ -46,19 +46,6 @@ bits I use to make things work locally...
       "disable": false,
       "url": "http://127.0.0.1:4000/precise/upload"
     },
-  "stt": {
-    "module": "deepspeech_server",
-    "deepspeech_server": {
-      "uri": "http://127.0.0.1:2000/stt"
-    }
-  },
-  "tts": {
-    "module": "mimic2",
-    "mimic2": {
-      "lang": "en-us",
-      "url": "http://127.0.0.1:3000"
-    },
-  // Hotword configurations
   "hotwords": {
     "yourwordhere": {
         "module": "precise",
@@ -68,3 +55,26 @@ bits I use to make things work locally...
         }
     },
 ```
+
+This is used to set your wake word, whether to upload the detected wakewords to the upload server, and which wake word engine and options to use.  Pocketsphinx uses the phonemes.
+
+```
+  "stt": {
+    "module": "deepspeech_server",
+    "deepspeech_server": {
+      "uri": "http://127.0.0.1:2000/stt"
+    }
+  },
+```
+The default STT file has more enumeration on what choices are available, this is just the one I end up using the most.
+
+```
+  "tts": {
+    "module": "mimic2",
+    "mimic2": {
+      "lang": "en-us",
+      "url": "http://127.0.0.1:3000"
+    },
+```
+
+TTS server configuration.  The URL might be tricky if your endpoint requires odd pagenames but this should work with the mimic2 connector I have here for anything that returns a .wav file. 
