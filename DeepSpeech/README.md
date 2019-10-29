@@ -35,7 +35,8 @@ optional arguments:
 
 Typical usage:
 ```
-DStest.py  -N -D -L 3000 -H 300 --order NHLD -U http://localhost:1880/stt $wavfile
+$ DStest.py  -N -D -L 3000 -H 300 --order NHLD -U http://localhost:1880/stt $wavfile
+Filtered: you might have to say that a different way
 ```
 
 #### Things I used to build my fine-tuning dataset:
