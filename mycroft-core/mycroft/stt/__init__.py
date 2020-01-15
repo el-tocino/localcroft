@@ -165,7 +165,8 @@ class DeepSpeechServerSTT(STT):
         super(DeepSpeechServerSTT, self).__init__()
 
 
-    def match_target_amplitude(sound, target_dBFS):
+    def normalize(self, sound):
+        target_dBFS = -19
         change_in_dBFS = target_dBFS - sound.dBFS
         return sound.apply_gain(change_in_dBFS)
 
@@ -182,11 +183,10 @@ class DeepSpeechServerSTT(STT):
         ds_audio = ds_audio.set_channels(1)
         ds_audio = ds_audio.low_pass_filter(3000)
         ds_audio = ds_audio.high_pass_filter(350)
-        ds_audio = match_target_amplitude(ds_audio, -19.0)
+        ds_audio = normalize(ds_audio)
         ds_audio.export("/tmp/mycroft/cache/stt/ds_audio.wav",format="wav")
         stt_audio = open("/tmp/mycroft/cache/stt/ds_audio.wav", "rb")
         response = post(self.config.get("uri"), data=stt_audio.read())
-        response2 = post(self.config.get("uri"), data=normalized_sound.read())
         return response.text
 
 
