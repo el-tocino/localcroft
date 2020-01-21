@@ -8,11 +8,13 @@ More on that [here](precise/Precise.md).
 
 #### Mycroft client DeepSpeech STT adjustments
 
-Trying to improve local deep speech audio handling. First remove the start_listening noise.  Second, padding the wav file with .1 seconds of silence at the beginning and the end.
+Trying to improve local deep speech audio handling. First remove the start_listening noise*.  Second, padding the wav file with .1 seconds of silence at the beginning and the end.
 
-Uses pydub. ```sudo apt install ffmpeg; sudo pip3 install pydub ``` to usually get these installed on picroft.
+Uses pydub, numpy, scipy, rnnoise-python. ```sudo apt install ffmpeg; sudo pip3 install pydub ``` or whatever for your env to usually get these installed on picroft.
 
-File itself replaces the one in mycroft-core/mycroft/stt/, then restart services. 
+File itself replaces the one in mycroft-core/mycroft/stt/, then restart services.   Note this file defaults to using rnnoise, which can add asignificant time to processing audio files.  If you're capable of using this repo you can figure out how to comment that line out if need be.  
+
+* I created a .05s silent wav file for my start_listening.wav.  
 
 #### non-mycroft Deepspeech stuff
 
