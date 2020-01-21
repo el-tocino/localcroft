@@ -220,7 +220,37 @@ def frame_generator(frame_duration_ms,
         yield audio[offset:offset + nums]
         offset += nums
 
+def normalize(sound):
+    target_dBFS = -19
+    change_in_dBFS = target_dBFS - sound.dBFS
+    return sound.apply_gain(change_in_dBFS)
 
+def dnoise(sound):
+    """
+    denoise clip via rnnoise
+    """
+    denoiser = rnnoise.RNNoise()
+    TARGET_SR = 48000
+    #audio, sample_rate = rnnoise.read_wave(filename)
+    sound = sound.set_frame_rate(TARGET_SR)
+    sound.export('dnntemp.wav', format='wav')
+    blah = wave.open('dnntemp.wav', 'rb')
+    blah = blah.readframes(blah.getnframes())
+    frames = frame_generator(10, blah, TARGET_SR)
+    frames = list(frames)
+    tups = [denoiser.process_frame(frame) for frame in frames]
+    denoised_frames = [tup[1] for tup in tups]
+    np_audio = numpy.concatenate([numpy.frombuffer(frame,
+                         dtype=numpy.int16)
+                   for frame in denoised_frames])
+    segment = AudioSegment(data=np_audio.tobytes(),
+                   sample_width=2,
+                   frame_rate=48000, channels=1)
+    segment = segment.set_frame_rate(16000)
+    return segment
+
+
+    
 class MycroftSTT(STT):
     """Default mycroft STT."""
     def __init__(self):
@@ -260,51 +290,6 @@ class DeepSpeechServerSTT(STT):
     def __init__(self):
         super(DeepSpeechServerSTT, self).__init__()
 
-    def normalize(self, sound):
-        target_dBFS = -19
-        change_in_dBFS = target_dBFS - sound.dBFS
-        return sound.apply_gain(change_in_dBFS)
-
-    def frame_generator(frame_duration_ms,
-                        audio,
-                        sample_rate):
-        """Generates audio frames from PCM audio data.
-        Takes the desired frame duration in milliseconds, the PCM data, and
-        the sample rate.
-        Yields Frames of the requested duration.
-        """
-        nums = int(sample_rate * (frame_duration_ms / 1000.0) * 2)
-        offset = 0
-        #duration = (float(nums) / sample_rate) / 2.0
-        while offset + nums < len(audio):
-            yield audio[offset:offset + nums]
-            offset += nums
-    
-    def dnoise(self, sound):
-        """
-        denoise clip via rnnoise
-        """
-        denoiser = rnnoise.RNNoise()
-        TARGET_SR = 48000
-        #audio, sample_rate = rnnoise.read_wave(filename)
-        sound = sound.set_frame_rate(TARGET_SR)
-        sound.export('dnntemp.wav', format='wav')
-        blah = wave.open('dnntemp.wav', 'rb')
-        blah = blah.readframes(blah.getnframes())
-        frames = frame_generator(10, blah, TARGET_SR)
-        frames = list(frames)
-        tups = [denoiser.process_frame(frame) for frame in frames]
-        denoised_frames = [tup[1] for tup in tups]
-        np_audio = numpy.concatenate([numpy.frombuffer(frame,
-                                                 dtype=numpy.int16)
-                                   for frame in denoised_frames])
-        segment = AudioSegment(data=np_audio.tobytes(),
-                               sample_width=2,
-                               frame_rate=48000, channels=1)
-        segment = segment.set_frame_rate(16000)
-        return segment
-
-
     def execute(self, audio, language=None):
         language = language or self.lang
         short_silence = AudioSegment.silent(duration=100, frame_rate=16000)
@@ -317,8 +302,8 @@ class DeepSpeechServerSTT(STT):
         ds_audio = ds_audio.set_channels(1)
         ds_audio = ds_audio.low_pass_filter(3000)
         ds_audio = ds_audio.high_pass_filter(300)
-        ds_audio = self.normalize(ds_audio)
-        ds_audio = self.dnoise(ds_audio)
+        ds_audio = normalize(ds_audio)
+        ds_audio = dnoise(ds_audio)
         ds_audio.export("/opt/mycroft/stt/ds_audio.wav",format="wav")
         stt_audio = open("/opt/mycroft/stt/ds_audio.wav", "rb")
         response = post(self.config.get("uri"), data=stt_audio.read())
