@@ -1,3 +1,7 @@
+### Don't use this anymore.  
+
+Things have changed a good deal since it was written, and the .7 version has much different setup as well.
+
 ### Custom Modeling
 
 I've been fiddling with deepspeech a bunch of late, trying to improve its accuracy when it listens to me.  
