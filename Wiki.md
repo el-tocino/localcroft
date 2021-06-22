@@ -1,10 +1,18 @@
 # Mycroft with Local Wikipedia 
 
-Alter your mycroft system's copy of the wikipedia python package to update the API_URL to query against your local wikimeda install, should be found in /usr/local/lib/python3.5/dist-packages/wikipedia/wikipedia.py  
+Alter your mycroft system's copy of the wikipedia python package to update the API_URL to query against your local wikimeda install, should be found in /usr/local/lib/python3.?/dist-packages/wikipedia/wikipedia.py  
 
 Would recommend you use a backup of the simple wiki w/o images for space.  
 
-# running locally
+## Easy method with Invader ZIM
+
+Check out  
+https://nivethan.dev/devlog/setting-up-a-local-copy-of-wikipedia.html
+
+On a pi3, this is very usable.  Takes about 60M of RAM and 500+MB depending which dump files you use.  I use nopic and simple for maximum efficiency.   
+Going this route also means only delivering wikipedia content, as the other wikimedia sites do not have zim files yet.
+
+## running locally with mediawiki
 
 (Don't do this on a pi....) most of these can be adjusted for other distros pretty easily. Also works with lighttpd. 
 
