@@ -1,7 +1,7 @@
 
 #### Custom/fine-tuning models
 
-See [here](DScustommodel.md)
+See [here](https://deepspeech.readthedocs.io/en/latest/TRAINING.html)
 
 #### DStest.py
 
