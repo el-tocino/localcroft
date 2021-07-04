@@ -13,12 +13,29 @@
 # limitations under the License.
 #
 
-import os
+#import os
 import hashlib
 import requests
+#from mycroft.util.log import LOG
+#from mycroft.tts import TTS, TTSValidator
+#from mycroft.configuration import Configuration
+
+from .tts import TTS, TTSValidator
+from .remote_tts import RemoteTTSException, RemoteTTSTimeoutException
 from mycroft.util.log import LOG
-from mycroft.tts import TTS, TTSValidator
-from mycroft.configuration import Configuration
+from mycroft.tts import cache_handler
+from mycroft.util import get_cache_directory
+from requests_futures.sessions import FuturesSession
+from requests.exceptions import (
+    ReadTimeout, ConnectionError, ConnectTimeout, HTTPError
+)
+from urllib import parse
+from .mimic_tts import VISIMES
+import math
+import base64
+import os
+import re
+import json
 
 
 class Mimic2(TTS):
@@ -33,7 +50,8 @@ class Mimic2(TTS):
         if os.path.exists(wav_file) and os.path.getsize(wav_file) > 0:
             LOG.info ('local response wav found.')
         else:
-            req_route = self.url + "/synthesize?text=" + sentence
+            #req_route = self.url + "/synthesize?text=" + sentence
+            req_route = self.url + sentence
             response = requests.get(req_route)
             with open(wav_file, 'wb') as f:
                 f.write(response.content)
