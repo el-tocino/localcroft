@@ -20,13 +20,9 @@ File itself replaces the one in mycroft-core/mycroft/stt/, then restart services
 
 [here](DeepSpeech)
 
-#### WAV TTS connector
+#### Moz/wav TTS connector
 
-(10/6/2020) And @domcross submitted a PR to mycroft-core to enable moz tts (or any url-to-wav tts interface, really).  [Should be approved soon](https://github.com/MycroftAI/mycroft-core/pull/2713).  This would superceed the bits here, which will be removed once that's added in.  
-
-(9/14/2020) Thanks to @domcross this is updated again and working.  
-(4/23/2020) This doesn't work with 20.x Mycroft releases, trying to fix and will post and update soon.
-Local Mimic2 tts quickie.  No visimes, no chunking, NO LIMITS!  Does some pseudo-caching of responses.  You have to manually clean that up, though.  Move your existing /path/to/mycroft-core/mycroft/tts/mimic2.py to /path/to/mycroft-core/mycroft/tts/default-mimic2.py and then copy this file into its place.  If you have a TTS that does .wav file return, this could be modified easily to handle pretty much any end point.
+@domcross got the mozilla tts bits into core, so just use that.  It should in theory work with most any URL submission that takes the text as url parameters and returns a wav file.  
 
 See the TTS config bits below for how to configure in your local conf.
 
