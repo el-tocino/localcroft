@@ -1,3 +1,9 @@
+## DEPRECATED. 
+
+See elsewhere for more reasons why, but this is no longer a useful repo for mycroft.  Neon and/or OVOS are the places you should be looking into, both of which are well beyond the things discussed here.  I'll keep this around for archival/amusement purposes, but you're better off looking for the ovos backend and such instead.  
+
+## DEPRECATED.
+
 ### Local mycroft things
 
 This includes several file changes to help run a local instance of mycroft, and some how-i-did-it pages for running local resources.
